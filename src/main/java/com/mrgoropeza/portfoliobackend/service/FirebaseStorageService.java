@@ -1,18 +1,11 @@
 package com.mrgoropeza.portfoliobackend.service;
 
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
-import com.mrgoropeza.portfoliobackend.conf.Properties;
 import com.mrgoropeza.portfoliobackend.service.interfaces.IStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,40 +17,20 @@ import java.io.IOException;
 public class FirebaseStorageService implements IStorageService{
 
     @Autowired
-    Properties properties;
+    private StorageClient firebaseStorage;
 
-    @EventListener
-    public void init(ApplicationReadyEvent event) {
-
-        // initialize Firebase
-
-        try {
-
-            ClassPathResource serviceAccount = new ClassPathResource("firebase.json");
-
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount.getInputStream()))
-                    .setStorageBucket(properties.getBucketName())
-                    .build();
-
-            FirebaseApp.initializeApp(options);
-
-        } catch (Exception ex) {
-
-            ex.printStackTrace();
-
-        }
-    }
+    @Autowired
+    private String imageUrl;
 
     @Override
     public String getImageUrl(String name) {
-        return String.format(properties.getImageUrl(), name);
+        return String.format(imageUrl, name);
     }
 
     @Override
     public String save(MultipartFile file) throws IOException {
 
-        Bucket bucket = StorageClient.getInstance().bucket();
+        Bucket bucket = firebaseStorage.bucket();
 
         String name = generateFileName(file.getOriginalFilename());
 
@@ -71,7 +44,7 @@ public class FirebaseStorageService implements IStorageService{
 
         byte[] bytes = getByteArrays(bufferedImage, getExtension(originalFileName));
 
-        Bucket bucket = StorageClient.getInstance().bucket();
+        Bucket bucket = firebaseStorage.bucket();
 
         String name = generateFileName(originalFileName);
 
@@ -83,7 +56,7 @@ public class FirebaseStorageService implements IStorageService{
     @Override
     public void delete(String name) throws IOException {
 
-        Bucket bucket = StorageClient.getInstance().bucket();
+        Bucket bucket = firebaseStorage.bucket();
 
         if (StringUtils.hasText(name)) {
             throw new IOException("invalid file name");
