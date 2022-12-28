@@ -8,8 +8,8 @@ import com.mrgoropeza.portfoliobackend.model.Tecnologia;
 
 public interface TecnologiaRepository extends JpaRepository<Tecnologia, Long> {
     
-    List<Tecnologia> findByTipo_idTipoTecnologia(Long idTipo);
+    List<Tecnologia> findByTipo_id(Long idTipo);
 
-    List<Tecnologia> findByTipo_nameTipoTecnologia(String nameTipo);
+    List<Tecnologia> findByTipo_name(String nameTipo);
 
 }

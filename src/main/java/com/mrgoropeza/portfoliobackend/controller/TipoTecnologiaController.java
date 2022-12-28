@@ -35,7 +35,7 @@ public class TipoTecnologiaController {
     public TipoTecnologia editTipoTecnologia(@PathVariable Long id, @RequestBody TipoTecnologia tipoTecnologia) {
         TipoTecnologia tipo = tipoTecnologiaService.findTipoTecnologia(id);
 
-        tipo.setNameTipoTecnologia(tipoTecnologia.getNameTipoTecnologia());
+        tipo.setName(tipoTecnologia.getName());
 
         tipoTecnologiaService.saveTipoTecnologia(tipo);
         

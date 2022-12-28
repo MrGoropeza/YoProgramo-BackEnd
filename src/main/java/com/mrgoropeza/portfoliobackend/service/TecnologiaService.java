@@ -17,7 +17,7 @@ public class TecnologiaService implements ITecnologiaService{
 
     @Override
     public List<Tecnologia> getTecnologias(String nombreTipo) {
-        List<Tecnologia> tecnologias = techRepository.findByTipo_nameTipoTecnologia(nombreTipo);
+        List<Tecnologia> tecnologias = techRepository.findByTipo_name(nombreTipo);
         return tecnologias;
     }
 

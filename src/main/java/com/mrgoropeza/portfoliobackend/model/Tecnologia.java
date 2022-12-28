@@ -1,6 +1,5 @@
 package com.mrgoropeza.portfoliobackend.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,10 +8,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
+@ToString
 public class Tecnologia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +21,9 @@ public class Tecnologia {
     private String name;
     private String imageUrl;
     private String description;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "idTipoTecnologia")
+    @OneToOne()
+    @JoinColumn()
     private TipoTecnologia tipo;
+
+
 }
