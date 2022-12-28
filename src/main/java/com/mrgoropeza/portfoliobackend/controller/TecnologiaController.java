@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrgoropeza.portfoliobackend.model.Tecnologia;
 import com.mrgoropeza.portfoliobackend.service.interfaces.IStorageService;
 import com.mrgoropeza.portfoliobackend.service.interfaces.ITecnologiaService;
+import com.mrgoropeza.portfoliobackend.utils.JsonConverter;
 
 @RestController
 public class TecnologiaController {
@@ -35,41 +37,67 @@ public class TecnologiaController {
         return tecnologiaService.getTecnologias(tipo);
     }
 
-    @PostMapping(value = "/techs/create", consumes = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE })
-    public void createTecnologia(@RequestPart(value = "tech") String tecnologia,
-            @RequestPart(value = "imagen", required = false) MultipartFile imagen) throws IOException {
+    @PostMapping(value = "/techs/create", consumes = { 
+        MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE 
+    })
+    public void createTecnologia(
+        @RequestPart(value = "tech") String tecnologia,
+        @RequestPart(value = "imagen", required = false) MultipartFile imagen
+    ) throws IOException {
 
-        Tecnologia techJson = new Tecnologia();
+        Tecnologia techJson = JsonConverter.fromJsonString(tecnologia, Tecnologia.class);
 
-        try {
-            ObjectMapper om = new ObjectMapper();
-            techJson = om.readValue(tecnologia, Tecnologia.class);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        String imageUrl = storageService.getImageUrl("no-image.jpg");
+
+        if(imagen != null){
+            storageService.save(imagen, techJson.getId().toString(), "techs/" + techJson.getTipo().getId());
+            
+            String path = "techs/" + techJson.getTipo().getId() + "/" + techJson.getId();
+            imageUrl = storageService.getImageUrl(path);
         }
-
-        String nombreArchivo = storageService.save(imagen);
-        String imageUrl = storageService.getImageUrl(nombreArchivo);
 
         techJson.setImageUrl(imageUrl);
 
         tecnologiaService.saveTecnologia(techJson);
     }
 
-    @PutMapping(value = "/techs/update/{id}")
-    public Tecnologia editTecnologia(@PathVariable Long id, @RequestBody Tecnologia tecnologia) {
-        Tecnologia tech = tecnologiaService.findTecnologia(id);
+    @PutMapping(value = "/techs/update/{id}", consumes = { 
+        MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE 
+    })
+    public Tecnologia editTecnologia(
+        @PathVariable Long id, 
+        @RequestPart(value = "tech") String tecnologia,
+        @RequestPart(value = "imagen", required = false) MultipartFile imagen
+    ) throws IOException {
+        Tecnologia anterior = tecnologiaService.findTecnologia(id);
+        if(anterior == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tecnologia no encontrada");
+        }
+        Tecnologia nueva = JsonConverter.fromJsonString(tecnologia, Tecnologia.class);
 
-        tech.setDescription(tecnologia.getDescription());
-        tech.setName(tecnologia.getName());
-        tech.setTipo(tecnologia.getTipo());
-        tech.setImageUrl(tecnologia.getImageUrl());
-        tech.setId(tecnologia.getId());
+        anterior.setDescription(nueva.getDescription());
+        anterior.setName(nueva.getName());
+        anterior.setTipo(nueva.getTipo());
 
-        tecnologiaService.saveTecnologia(tech);
+        String imageUrl = anterior.getImageUrl();
 
-        return tech;
+        System.out.println(imagen);
+
+        if(imagen != null){
+            System.out.println("Actualizando Imagen");
+            storageService.save(imagen, anterior.getId().toString(), "techs/" + anterior.getTipo().getId());
+            
+            String path = "techs/" + anterior.getTipo().getId() + "/" + anterior.getId();
+            imageUrl = storageService.getImageUrl(path);
+        }
+        
+        anterior.setImageUrl(imageUrl);
+
+        tecnologiaService.saveTecnologia(anterior);
+
+        return anterior;
     }
 
     @DeleteMapping(value = "/techs/delete/{id}")

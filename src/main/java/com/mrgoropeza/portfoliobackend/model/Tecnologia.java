@@ -1,10 +1,5 @@
 package com.mrgoropeza.portfoliobackend.model;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mrgoropeza.portfoliobackend.utils.JsonConverter;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
