@@ -13,7 +13,7 @@ public interface IStorageService {
     
     String getImageUrl(String name);
 
-    String save(MultipartFile file) throws IOException;
+    void save(MultipartFile file, String fileName, String path) throws IOException;
 
     String save(BufferedImage bufferedImage, String originalFileName) throws IOException;
 

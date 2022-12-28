@@ -28,15 +28,10 @@ public class FirebaseStorageService implements IStorageService{
     }
 
     @Override
-    public String save(MultipartFile file) throws IOException {
-
+    public void save(MultipartFile file, String fileName, String path) throws IOException {
         Bucket bucket = firebaseStorage.bucket();
 
-        String name = generateFileName(file.getOriginalFilename());
-
-        bucket.create(name, file.getBytes(), file.getContentType());
-
-        return name;
+        bucket.create(path + "/" + fileName, file.getBytes(), file.getContentType());
     }
 
     @Override
