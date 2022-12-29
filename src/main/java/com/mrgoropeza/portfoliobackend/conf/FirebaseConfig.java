@@ -38,9 +38,11 @@ public class FirebaseConfig {
                 .setStorageBucket(bucketName)
                 .build();
 
-        if (FirebaseApp.getInstance() != null) {
+        if (FirebaseApp.getApps().size() > 0) {
+            System.out.println("\n\nFirebaseApp ya inicializado anteriormente. Usando la instancia ya inicializada.\n\n");
             return FirebaseApp.getInstance();
         }
+        System.out.println("\n\nInicializando FirebaseApp\n\n");
         return FirebaseApp.initializeApp(options);
     }
 
