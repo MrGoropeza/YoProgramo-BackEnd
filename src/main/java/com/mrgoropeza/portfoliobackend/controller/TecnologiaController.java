@@ -55,6 +55,8 @@ public class TecnologiaController {
             
             String path = "techs/" + techJson.getTipo().getId() + "/" + techJson.getId();
             imageUrl = storageService.getImageUrl(path);
+        }else if(techJson.getImageUrl() != null){
+            imageUrl = techJson.getImageUrl();
         }
 
         techJson.setImageUrl(imageUrl);
