@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Tecnologia {
+public class Tech {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -19,6 +19,6 @@ public class Tecnologia {
     private String description;
     @OneToOne()
     @JoinColumn()
-    private TipoTecnologia tipo;
+    private TechType tipo;
 
 }

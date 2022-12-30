@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class TipoTecnologia {
+public class TechType {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;

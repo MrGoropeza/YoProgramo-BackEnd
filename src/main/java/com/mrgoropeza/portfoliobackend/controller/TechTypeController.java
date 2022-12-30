@@ -3,8 +3,8 @@ package com.mrgoropeza.portfoliobackend.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.mrgoropeza.portfoliobackend.model.TipoTecnologia;
-import com.mrgoropeza.portfoliobackend.service.TipoTecnologiaService;
+import com.mrgoropeza.portfoliobackend.model.TechType;
+import com.mrgoropeza.portfoliobackend.service.TechTypeService;
 
 import java.util.List;
 
@@ -18,24 +18,27 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-public class TipoTecnologiaController {
+public class TechTypeController {
 
     @Autowired
-    private TipoTecnologiaService tipoTecnologiaService;
+    private TechTypeService tipoTecnologiaService;
 
-    @GetMapping(value="/tipoTecnologia/list")
-    public List<TipoTecnologia> getTiposTecnologias() {
+    // getAll
+    @GetMapping(value="/techtypes")
+    public List<TechType> getTiposTecnologias() {
         return tipoTecnologiaService.getTiposTecnologias();
     }
 
-    @PostMapping(value="/tipoTecnologia/create")
-    public void createTipoTecnologia(@RequestBody TipoTecnologia tipoTecnologia) {
+    // add
+    @PostMapping(value="/techtype")
+    public void createTipoTecnologia(@RequestBody TechType tipoTecnologia) {
         tipoTecnologiaService.saveTipoTecnologia(tipoTecnologia);
     }
 
-    @PutMapping(value="/tipoTecnologia/update/{id}")
-    public TipoTecnologia editTipoTecnologia(@PathVariable Long id, @RequestBody TipoTecnologia tipoTecnologia) {
-        TipoTecnologia tipo = tipoTecnologiaService.findTipoTecnologia(id);
+    // update
+    @PutMapping(value="/techtype/{id}")
+    public TechType editTipoTecnologia(@PathVariable Long id, @RequestBody TechType tipoTecnologia) {
+        TechType tipo = tipoTecnologiaService.findTipoTecnologia(id);
         if(tipo == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de Tecnologia no encontrada");
         }
@@ -46,10 +49,10 @@ public class TipoTecnologiaController {
         return tipo;
     }
     
-    @DeleteMapping(value = "/tipoTecnologia/delete/{id}")
-    public TipoTecnologia deleteTipoTecnologia(@PathVariable Long id, @RequestBody TipoTecnologia tipoTecnologia) {
-        tipoTecnologiaService.deleteTipoTecnologia(id);
-        return tipoTecnologia;
+    // delete
+    @DeleteMapping(value = "techtype/{id}")
+    public TechType deleteTipoTecnologia(@PathVariable Long id) {
+        return tipoTecnologiaService.deleteTipoTecnologia(id);
     }
     
     
