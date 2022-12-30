@@ -1,7 +1,6 @@
 package com.mrgoropeza.portfoliobackend.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,13 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.mrgoropeza.portfoliobackend.dto.MultipleRecordsDTO;
 import com.mrgoropeza.portfoliobackend.model.Tech;
 import com.mrgoropeza.portfoliobackend.service.interfaces.IStorageService;
 import com.mrgoropeza.portfoliobackend.service.interfaces.ITechService;
@@ -27,21 +26,37 @@ import com.mrgoropeza.portfoliobackend.utils.JsonConverter;
 public class TechController {
 
     @Autowired
-    private ITechService tecnologiaService;
+    private ITechService techService;
 
     @Autowired
     private IStorageService storageService;
 
-    @GetMapping("/techs/list")
-    public List<Tech> getTecnologias(@RequestParam String tipo) {
-        return tecnologiaService.getTecnologias(tipo);
+    // getAll
+    @GetMapping("/techs/")
+    public MultipleRecordsDTO<Tech> getTecnologias(@RequestParam String techTypeName, @RequestParam(required = false) String query) throws IOException {
+        long totalRecords = techService.getTotalRecords();
+        MultipleRecordsDTO<Tech> response = new MultipleRecordsDTO<Tech>();
+        if(query != null && !query.equalsIgnoreCase("")){
+            response.setData(techService.getWithQuery(techTypeName, query));
+        }else{
+            response.setData(techService.getAll(techTypeName));
+        }
+        response.setTotalRecords(totalRecords);
+        return response;
     }
 
-    @PostMapping(value = "/techs/create", consumes = { 
+    // getById
+    @GetMapping("/tech/{id}")
+    public Tech getById(@PathVariable Long id){
+        return techService.getById(id);
+    }
+
+    // add
+    @PostMapping(value = "/tech/", consumes = { 
         MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE 
     })
-    public void createTecnologia(
+    public Tech createTecnologia(
         @RequestPart(value = "tech") String tecnologia,
         @RequestPart(value = "imagen", required = false) MultipartFile imagen
     ) throws IOException {
@@ -61,10 +76,10 @@ public class TechController {
 
         techJson.setImageUrl(imageUrl);
 
-        tecnologiaService.saveTecnologia(techJson);
+       return techService.save(techJson);
     }
 
-    @PutMapping(value = "/techs/update/{id}", consumes = { 
+    @PutMapping(value = "/tech/{id}", consumes = { 
         MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE 
     })
@@ -73,7 +88,7 @@ public class TechController {
         @RequestPart(value = "tech") String tecnologia,
         @RequestPart(value = "imagen", required = false) MultipartFile imagen
     ) throws IOException {
-        Tech anterior = tecnologiaService.findTecnologia(id);
+        Tech anterior = techService.getById(id);
         if(anterior == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tecnologia no encontrada");
         }
@@ -97,14 +112,14 @@ public class TechController {
         
         anterior.setImageUrl(imageUrl);
 
-        tecnologiaService.saveTecnologia(anterior);
+        techService.save(anterior);
 
         return anterior;
     }
 
-    @DeleteMapping(value = "/techs/delete/{id}")
-    public Tech deleteTecnologia(@PathVariable Long id, @RequestBody Tech tecnologia) {
-        tecnologiaService.deleteTecnologia(id);
-        return tecnologia;
+    // delete
+    @DeleteMapping(value = "/tech/{id}")
+    public Tech deleteTecnologia(@PathVariable Long id) {
+        return techService.delete(id);
     }
 }

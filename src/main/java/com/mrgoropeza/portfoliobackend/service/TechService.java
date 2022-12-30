@@ -1,5 +1,6 @@
 package com.mrgoropeza.portfoliobackend.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.mrgoropeza.portfoliobackend.model.Tech;
 import com.mrgoropeza.portfoliobackend.repository.TechRepository;
 import com.mrgoropeza.portfoliobackend.service.interfaces.ITechService;
+import com.mrgoropeza.portfoliobackend.utils.QueryClasses.QueryMeta;
 
 @Service
 public class TechService implements ITechService{
@@ -16,23 +18,41 @@ public class TechService implements ITechService{
     private TechRepository techRepository;
 
     @Override
-    public List<Tech> getTecnologias(String nombreTipo) {
-        List<Tech> tecnologias = techRepository.findByTipo_name(nombreTipo);
-        return tecnologias;
+    public List<Tech> getAll(String techTypeName) {
+        return techRepository.findByTipo_name(techTypeName, null).toList();
     }
 
     @Override
-    public void saveTecnologia(Tech tecnologia) {
-        techRepository.save(tecnologia);
+    public List<Tech> getWithQuery(String techTypeName, String query) throws IOException {
+        QueryMeta queryMeta = QueryMeta.fromCodedString(query);
+
+        if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
+            return techRepository.findAll(queryMeta.toPageable()).toList();
+        }
+        return techRepository.findByNameAndTipo_name(techTypeName, queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
     }
 
     @Override
-    public void deleteTecnologia(Long id) {
-        techRepository.deleteById(id);
+    public Tech save(Tech tech) {
+        return techRepository.save(tech);
     }
 
     @Override
-    public Tech findTecnologia(Long id) {
+    public Tech delete(Long id) {
+        Tech deleted = techRepository.findById(id).orElse(null);
+        techRepository.delete(deleted);
+        return deleted;
+    }
+
+    @Override
+    public Tech getById(Long id) {
         return techRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public long getTotalRecords() {
+        return techRepository.count();
+    }
+
+    
 }

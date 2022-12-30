@@ -30,7 +30,7 @@ public class TechTypeController {
     public MultipleRecordsDTO<TechType> getAll(@RequestParam(required = false) String query) throws IOException {
         long totalRecords = techTypeService.getTotalRecords();
         MultipleRecordsDTO<TechType> response = new MultipleRecordsDTO<TechType>();
-        if(query != null){
+        if(query != null && !query.equalsIgnoreCase("")){
             response.setData(techTypeService.getWithQuery(query));
         }else{
             response.setData(techTypeService.getAll());

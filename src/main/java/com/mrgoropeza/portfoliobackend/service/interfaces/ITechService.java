@@ -1,17 +1,22 @@
 package com.mrgoropeza.portfoliobackend.service.interfaces;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.mrgoropeza.portfoliobackend.model.Tech;
 
 public interface ITechService {
 
-    public List<Tech> getTecnologias(String nombreTipo);
+    public List<Tech> getAll(String techTypeName);
 
-    public void saveTecnologia(Tech tecnologia);
+    public List<Tech> getWithQuery(String techTypeName, String query) throws IOException;
 
-    public void deleteTecnologia(Long id);
+    public Tech save(Tech tech);
 
-    public Tech findTecnologia(Long id);
+    public Tech delete(Long id);
+
+    public Tech getById(Long id);
+
+    public long getTotalRecords();
     
 }

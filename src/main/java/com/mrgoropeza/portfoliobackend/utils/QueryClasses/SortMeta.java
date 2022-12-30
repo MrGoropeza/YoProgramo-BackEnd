@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class SortMeta {
     String field;
-    SortOrder order;
+    int order;
 }
