@@ -75,12 +75,12 @@ public class JsonConverter implements IJsonConverter{
     }
 
     private static ObjectReader getObjectReader(Class<?> type) {
-        if (reader == null) instantiateMapper(type);
+        instantiateMapper(type);
         return reader;
     }
 
     private static ObjectWriter getObjectWriter(Class<?> type) {
-        if (writer == null) instantiateMapper(type);
+        instantiateMapper(type);
         return writer;
     }
     
