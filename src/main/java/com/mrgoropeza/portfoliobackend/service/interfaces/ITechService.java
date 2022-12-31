@@ -7,9 +7,13 @@ import com.mrgoropeza.portfoliobackend.model.Tech;
 
 public interface ITechService {
 
-    public List<Tech> getAll(String techTypeName);
+    public List<Tech> getAll();
 
-    public List<Tech> getWithQuery(String techTypeName, String query) throws IOException;
+    public List<Tech> getAllByType(String techTypeName);
+
+    public List<Tech> getWithQuery(String query) throws IOException;
+
+    public List<Tech> getWithQueryAndType(String techTypeName, String query) throws IOException;
 
     public Tech save(Tech tech);
 
@@ -18,5 +22,7 @@ public interface ITechService {
     public Tech getById(Long id);
 
     public long getTotalRecords();
+
+    public long getTypeTotalRecords(String techTypeName);
     
 }

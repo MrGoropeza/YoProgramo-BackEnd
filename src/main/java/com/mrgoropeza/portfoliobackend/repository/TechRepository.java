@@ -16,4 +16,8 @@ public interface TechRepository extends JpaRepository<Tech, Long> {
 
     Page<Tech> findByTipo_name(String nameTipo, Pageable pageable);
 
+    List<Tech> findByTipo_name(String nameTipo);
+
+    Page<Tech> findByName(String name, Pageable pageable);
+
 }

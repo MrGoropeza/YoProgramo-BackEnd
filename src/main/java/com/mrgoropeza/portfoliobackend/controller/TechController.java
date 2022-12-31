@@ -33,15 +33,35 @@ public class TechController {
 
     // getAll
     @GetMapping("/techs/")
-    public MultipleRecordsDTO<Tech> getTecnologias(@RequestParam String techTypeName, @RequestParam(required = false) String query) throws IOException {
-        long totalRecords = techService.getTotalRecords();
+    public MultipleRecordsDTO<Tech> getAllByType(@RequestParam(required = false) String techTypeName, @RequestParam(required = false) String query) throws IOException {
         MultipleRecordsDTO<Tech> response = new MultipleRecordsDTO<Tech>();
-        if(query != null && !query.equalsIgnoreCase("")){
-            response.setData(techService.getWithQuery(techTypeName, query));
-        }else{
-            response.setData(techService.getAll(techTypeName));
+
+        if(query != null){
+            if(query.equalsIgnoreCase("")){
+                query = null;
+            }
         }
-        response.setTotalRecords(totalRecords);
+        if(techTypeName != null){
+            if(techTypeName.equalsIgnoreCase("")){
+                techTypeName = null;
+            }
+        }
+        System.out.println("Query: " + query);
+        System.out.println("TechTypeName: " + techTypeName);
+
+        if(techTypeName == null && query == null){
+            response.setData(techService.getAll());
+            response.setTotalRecords(techService.getTotalRecords());
+        }else if(techTypeName != null && query == null){
+            response.setData(techService.getAllByType(techTypeName));
+            response.setTotalRecords(techService.getTypeTotalRecords(techTypeName));
+        }else if(techTypeName == null && query != null){
+            response.setData(techService.getWithQuery(query));
+            response.setTotalRecords(techService.getTotalRecords());
+        }else{
+            response.setData(techService.getWithQueryAndType(techTypeName, query));
+            response.setTotalRecords(techService.getTypeTotalRecords(techTypeName));
+        }
         return response;
     }
 
@@ -62,6 +82,8 @@ public class TechController {
     ) throws IOException {
 
         Tech techJson = JsonConverter.fromJsonString(tecnologia, Tech.class);
+
+        techJson = techService.save(techJson);
 
         String imageUrl = storageService.getImageUrl("no-image.jpg");
 

@@ -18,12 +18,28 @@ public class TechService implements ITechService{
     private TechRepository techRepository;
 
     @Override
-    public List<Tech> getAll(String techTypeName) {
-        return techRepository.findByTipo_name(techTypeName, null).toList();
+    public List<Tech> getAll() {
+        return techRepository.findAll();
     }
 
     @Override
-    public List<Tech> getWithQuery(String techTypeName, String query) throws IOException {
+    public List<Tech> getAllByType(String techTypeName) {
+        return techRepository.findByTipo_name(techTypeName);
+    }
+
+        
+    @Override
+    public List<Tech> getWithQuery(String query) throws IOException {
+        QueryMeta queryMeta = QueryMeta.fromCodedString(query);
+        if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
+            return techRepository.findAll(queryMeta.toPageable()).toList();
+        }
+        return techRepository.findByTipo_name(queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
+    }
+
+
+    @Override
+    public List<Tech> getWithQueryAndType(String techTypeName, String query) throws IOException {
         QueryMeta queryMeta = QueryMeta.fromCodedString(query);
 
         if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
@@ -52,6 +68,11 @@ public class TechService implements ITechService{
     @Override
     public long getTotalRecords() {
         return techRepository.count();
+    }
+
+    @Override
+    public long getTypeTotalRecords(String techTypeName) {
+        return techRepository.findByTipo_name(techTypeName).size();
     }
 
     
