@@ -14,11 +14,12 @@ jobs:
         working-directory: ./
         run: 'echo "$SPRING_APP_PROPERTIES" > src/main/resources/application.properties'
         shell: bash
+        env:
+          SPRING_APP_PROPERTIES: ${{secrets.SPRING_APP_PROPERTIES}}
       - name: pring firebase secrets
         working-directory: ./
         run: 'echo "$FIREBASE_CONFIG" > src/main/resources/firebase.json'
         shell: bash
         env:
-          SPRING_APP_PROPERTIES: ${{secrets.SPRING_APP_PROPERTIES}}
           FIREBASE_CONFIG: ${{secrets.FIREBASE_CONFIG}}
       
