@@ -1,0 +1,18 @@
+on:
+  push:
+    branches:
+      - master
+      
+jobs:
+  build:
+    name: deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: print springboot secrets
+      - run: 'echo "$SPRING_APP_PROPERTIES" > src/main/resources/application.properties'
+      - run: 'echo "$FIREBASE_CONFIG" > src/main/resources/firebase.json'
+        shell: bash
+        env:
+          SPRING_APP_PROPERTIES: ${{secrets.SPRING_APP_PROPERTIES}}
+          FIREBASE_CONFIG: ${{secrets.FIREBASE_CONFIG}}
