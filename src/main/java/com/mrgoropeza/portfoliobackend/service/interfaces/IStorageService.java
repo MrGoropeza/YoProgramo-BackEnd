@@ -3,19 +3,14 @@ package com.mrgoropeza.portfoliobackend.service.interfaces;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
 public interface IStorageService {
-    
+
     String getImageUrl(String name);
 
     void save(MultipartFile file, String fileName, String path) throws IOException;
-
-    String save(BufferedImage bufferedImage, String originalFileName) throws IOException;
 
     void delete(String name) throws IOException;
 
@@ -25,24 +20,5 @@ public interface IStorageService {
 
     default String generateFileName(String originalFileName) {
         return UUID.randomUUID().toString() + getExtension(originalFileName);
-    }
-
-    default byte[] getByteArrays(BufferedImage bufferedImage, String format) throws IOException {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        try {
-
-            ImageIO.write(bufferedImage, format, baos);
-
-            baos.flush();
-
-            return baos.toByteArray();
-
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            baos.close();
-        }
     }
 }

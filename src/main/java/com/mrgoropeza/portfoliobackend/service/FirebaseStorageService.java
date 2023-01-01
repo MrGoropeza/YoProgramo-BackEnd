@@ -10,11 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @Service
-public class FirebaseStorageService implements IStorageService{
+public class FirebaseStorageService implements IStorageService {
 
     @Autowired
     private StorageClient firebaseStorage;
@@ -32,20 +31,6 @@ public class FirebaseStorageService implements IStorageService{
         Bucket bucket = firebaseStorage.bucket();
 
         bucket.create(path + "/" + fileName, file.getBytes(), file.getContentType());
-    }
-
-    @Override
-    public String save(BufferedImage bufferedImage, String originalFileName) throws IOException {
-
-        byte[] bytes = getByteArrays(bufferedImage, getExtension(originalFileName));
-
-        Bucket bucket = firebaseStorage.bucket();
-
-        String name = generateFileName(originalFileName);
-
-        bucket.create(name, bytes);
-
-        return name;
     }
 
     @Override
