@@ -10,8 +10,8 @@ import com.mrgoropeza.portfoliobackend.model.Place;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-    Page<Place> findByName(String name, Pageable pageable);
+    Page<Place> findByNameContaining(String name, Pageable pageable);
 
-    List<Place> findByName(String name);
+    List<Place> findByNameContaining(String name);
     
 }

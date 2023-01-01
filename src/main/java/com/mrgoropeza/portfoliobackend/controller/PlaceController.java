@@ -41,8 +41,7 @@ public class PlaceController {
                 query = null;
             }
         }
-        System.out.println("Query: " + query);
-
+        
         if(query == null){
             response.setData(placeService.getAll());
             response.setTotalRecords(placeService.getTotalRecords());
@@ -50,17 +49,18 @@ public class PlaceController {
             response.setData(placeService.getWithQuery(query));
             response.setTotalRecords(placeService.getQueryTotalRecords(query));
         }
+        System.out.println(response);
         return response;
     }
 
     // getById
-    @GetMapping("/Place/{id}")
+    @GetMapping("/place/{id}")
     public Place getById(@PathVariable Long id){
         return placeService.getById(id);
     }
 
     // add
-    @PostMapping(value = "/Place/", consumes = { 
+    @PostMapping(value = "/place/", consumes = { 
         MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE 
     })
@@ -76,9 +76,9 @@ public class PlaceController {
         String imageUrl = storageService.getImageUrl("no-image.jpg");
 
         if(imagen != null){
-            storageService.save(imagen, PlaceJson.getId().toString(), "Places/");
+            storageService.save(imagen, PlaceJson.getId().toString(), "places/");
             
-            String path = "Places/" + PlaceJson.getId().toString();
+            String path = "places/" + PlaceJson.getId().toString();
             imageUrl = storageService.getImageUrl(path);
         }else if(PlaceJson.getImageUrl() != null){
             imageUrl = PlaceJson.getImageUrl();
@@ -89,13 +89,13 @@ public class PlaceController {
        return placeService.save(PlaceJson);
     }
 
-    @PutMapping(value = "/Place/{id}", consumes = { 
+    @PutMapping(value = "/place/{id}", consumes = { 
         MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE 
     })
     public Place editTecnologia(
         @PathVariable Long id, 
-        @RequestPart(value = "Place") String place,
+        @RequestPart(value = "place") String place,
         @RequestPart(value = "imagen", required = false) MultipartFile imagen
     ) throws IOException {
         Place anterior = placeService.getById(id);
@@ -110,9 +110,9 @@ public class PlaceController {
         String imageUrl = anterior.getImageUrl();
 
         if(imagen != null){
-            storageService.save(imagen, anterior.getId().toString(), "Places/");
+            storageService.save(imagen, anterior.getId().toString(), "places/");
             
-            String path = "Places/" + anterior.getId().toString();
+            String path = "places/" + anterior.getId().toString();
             imageUrl = storageService.getImageUrl(path);
         }
         
@@ -124,7 +124,7 @@ public class PlaceController {
     }
 
     // delete
-    @DeleteMapping(value = "/Place/{id}")
+    @DeleteMapping(value = "/place/{id}")
     public Place deleteTecnologia(@PathVariable Long id) {
         return placeService.delete(id);
     }

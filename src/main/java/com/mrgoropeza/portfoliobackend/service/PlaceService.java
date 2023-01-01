@@ -28,7 +28,7 @@ public class PlaceService implements IPlaceService {
         if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
             return placeRepo.findAll(queryMeta.toPageable()).toList();
         }
-        return placeRepo.findByName(queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
+        return placeRepo.findByNameContaining(queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
     }
 
     @Override
@@ -54,11 +54,12 @@ public class PlaceService implements IPlaceService {
     }
 
     @Override
-    public long getQueryTotalRecords(String name) {
-        if(name.equalsIgnoreCase("")){
+    public long getQueryTotalRecords(String query) throws IOException {
+        QueryMeta queryMeta = QueryMeta.fromCodedString(query);
+        if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
             return getTotalRecords();
         }
-        return placeRepo.findByName(name).size();
+        return placeRepo.findByNameContaining(queryMeta.getGlobalFilter()).size();
     }
     
 }

@@ -19,6 +19,6 @@ public interface IPlaceService {
 
     public long getTotalRecords();
 
-    public long getQueryTotalRecords(String name);
+    public long getQueryTotalRecords(String name) throws IOException;
 
 }

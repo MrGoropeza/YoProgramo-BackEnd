@@ -13,6 +13,7 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
+    private String url;
     private String imageUrl;
     private String description;
 }
