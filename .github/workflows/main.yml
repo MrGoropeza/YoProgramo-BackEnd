@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - uses: actions/checkout@v2
       - name: print springboot secrets
         working-directory: ./
         run: 'echo "$SPRING_APP_PROPERTIES" > src/main/resources/application.properties'
