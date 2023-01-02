@@ -76,7 +76,7 @@ public class PlaceController {
         String imageUrl = storageService.getImageUrl("no-image.jpg");
 
         if(imagen != null){
-            storageService.save(imagen, PlaceJson.getId().toString(), "places/");
+            storageService.save(imagen, PlaceJson.getId().toString(), "places");
             
             String path = "places/" + PlaceJson.getId().toString();
             imageUrl = storageService.getImageUrl(path);
