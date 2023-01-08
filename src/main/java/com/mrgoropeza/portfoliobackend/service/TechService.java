@@ -45,7 +45,7 @@ public class TechService implements ITechService{
         if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
             return techRepository.findAll(queryMeta.toPageable()).toList();
         }
-        return techRepository.findByNameAndTipo_name(techTypeName, queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
+        return techRepository.findByNameContainingAndTipo_name(techTypeName, queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
     }
 
     @Override

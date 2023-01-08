@@ -12,7 +12,7 @@ public interface TechRepository extends JpaRepository<Tech, Long> {
     
     List<Tech> findByTipo_id(Long idTipo);
 
-    Page<Tech> findByNameAndTipo_name(String name, String nameTipo, Pageable pageable);
+    Page<Tech> findByNameContainingAndTipo_name(String name, String nameTipo, Pageable pageable);
 
     Page<Tech> findByTipo_name(String nameTipo, Pageable pageable);
 

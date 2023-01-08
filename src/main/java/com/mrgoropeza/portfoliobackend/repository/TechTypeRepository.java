@@ -8,5 +8,5 @@ import com.mrgoropeza.portfoliobackend.model.TechType;
 
 public interface TechTypeRepository extends JpaRepository<TechType, Long> {
 
-    Page<TechType> findByName(String name, Pageable pageable);
+    Page<TechType> findByNameContaining(String name, Pageable pageable);
 }

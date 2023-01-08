@@ -53,7 +53,7 @@ public class TechTypeService implements ITechTypeService {
             return techTypeRepo.findAll(paging).toList();
         }
         System.out.println("Resultado con globalFilter");
-        return techTypeRepo.findByName(queryMeta.getGlobalFilter(), paging).toList();
+        return techTypeRepo.findByNameContaining(queryMeta.getGlobalFilter(), paging).toList();
     }
 
     @Override
