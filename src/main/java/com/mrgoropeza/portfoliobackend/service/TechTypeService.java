@@ -73,4 +73,13 @@ public class TechTypeService implements ITechTypeService {
         return techTypeRepo.findById(id).orElse(null);
     }
 
+    @Override
+    public long getQueryTotalRecords(String query) throws IOException {
+        QueryMeta queryMeta = QueryMeta.fromCodedString(query);
+        if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
+            return getTotalRecords();
+        }
+        return techTypeRepo.findByNameContaining(queryMeta.getGlobalFilter()).size();
+    }
+
 }
