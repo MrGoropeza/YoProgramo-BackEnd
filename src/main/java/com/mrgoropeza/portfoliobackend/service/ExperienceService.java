@@ -1,6 +1,7 @@
 package com.mrgoropeza.portfoliobackend.service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,14 @@ public class ExperienceService implements IExperienceService {
     }
 
     @Override
-    public Experience save(Experience model) {
-        System.out.println("Guardando: " + model.toString());
-        return repo.save(model);
+    public Experience save(Experience value) {
+        Experience prevWork = repo.findByActualWork(true).orElse(null);
+        if(value.isActualWork() && prevWork != null){
+            prevWork.setActualWork(false);
+            prevWork.setFinishDate(new Date());
+            repo.save(prevWork);
+        }
+        return repo.save(value);
     }
 
     @Override
