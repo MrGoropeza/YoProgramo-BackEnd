@@ -21,7 +21,7 @@ public class Person {
     private String imageUrl;
     @OneToOne()
     @JoinColumn()
-    private Place actualWork;
+    private Experience actualWork;
     @OneToOne()
     @JoinColumn()
     private Place actualCareer;

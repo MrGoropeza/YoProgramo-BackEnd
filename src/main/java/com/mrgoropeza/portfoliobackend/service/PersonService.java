@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrgoropeza.portfoliobackend.model.Person;
+import com.mrgoropeza.portfoliobackend.repository.ExperienceRepository;
 import com.mrgoropeza.portfoliobackend.repository.PersonRepository;
 import com.mrgoropeza.portfoliobackend.service.interfaces.IPersonService;
 import com.mrgoropeza.portfoliobackend.utils.QueryClasses.QueryMeta;
@@ -17,10 +18,15 @@ public class PersonService implements IPersonService {
     @Autowired
     private PersonRepository personRepo;
 
+    @Autowired
+    private ExperienceRepository expRepo;
+
     @Override
     public Person getMyInfo() {
         List<Person> request = personRepo.findByitsMe(true);
         if(request.size() > 0){
+            Person me = request.get(0);
+            me.setActualWork(expRepo.findByActualWork(true).orElse(null));
             return request.get(0);
         }
         Person nueva = new Person();
