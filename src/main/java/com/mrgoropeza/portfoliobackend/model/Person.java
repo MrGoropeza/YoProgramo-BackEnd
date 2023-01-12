@@ -24,5 +24,5 @@ public class Person {
     private Experience actualWork;
     @OneToOne()
     @JoinColumn()
-    private Place actualCareer;
+    private Education actualCareer;
 }

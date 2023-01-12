@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrgoropeza.portfoliobackend.model.Person;
+import com.mrgoropeza.portfoliobackend.repository.EducationRepository;
 import com.mrgoropeza.portfoliobackend.repository.ExperienceRepository;
 import com.mrgoropeza.portfoliobackend.repository.PersonRepository;
 import com.mrgoropeza.portfoliobackend.service.interfaces.IPersonService;
@@ -21,17 +22,23 @@ public class PersonService implements IPersonService {
     @Autowired
     private ExperienceRepository expRepo;
 
+    @Autowired
+    private EducationRepository educationRepository;
+
     @Override
     public Person getMyInfo() {
         List<Person> request = personRepo.findByitsMe(true);
-        if(request.size() > 0){
-            Person me = request.get(0);
+        Person me;
+        if(request.size() == 0){
+            me = new Person();
+            me.setItsMe(true);
+            personRepo.save(me);
             me.setActualWork(expRepo.findByActualWork(true).orElse(null));
-            return request.get(0);
+            me.setActualCareer(educationRepository.findByActualEducation(true).orElse(null));
+            return me;
         }
-        Person nueva = new Person();
-        nueva.setItsMe(true);
-        return nueva;
+        me = request.get(0);
+        return me;
     }
 
     @Override

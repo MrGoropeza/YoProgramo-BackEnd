@@ -58,7 +58,11 @@ public class PersonController {
 
     @GetMapping("/person/me/")
     public Person getMe(){
-        return personService.getMyInfo();
+        Person me = personService.getMyInfo();
+        if(me.getImageUrl() == null){
+            me.setImageUrl(storageService.getImageUrl("no-image-profile.png"));
+        }
+        return me;
     }
 
     // add
