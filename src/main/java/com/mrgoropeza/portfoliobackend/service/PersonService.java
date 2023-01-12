@@ -32,12 +32,14 @@ public class PersonService implements IPersonService {
         if(request.size() == 0){
             me = new Person();
             me.setItsMe(true);
-            personRepo.save(me);
             me.setActualWork(expRepo.findByActualWork(true).orElse(null));
             me.setActualCareer(educationRepository.findByActualEducation(true).orElse(null));
+            personRepo.save(me);
             return me;
         }
         me = request.get(0);
+        me.setActualWork(expRepo.findByActualWork(true).orElse(null));
+        me.setActualCareer(educationRepository.findByActualEducation(true).orElse(null));
         return me;
     }
 
