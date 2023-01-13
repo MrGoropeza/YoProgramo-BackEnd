@@ -10,12 +10,14 @@ import com.mrgoropeza.portfoliobackend.model.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long>{
 
-    public List<Person> findByitsMe(boolean flag);
+    public List<Person> findByitsMeFalse();
 
-    public Page<Person> findByitsMe(boolean flag, Pageable pageable);
+    public List<Person> findByItsMeTrue();
 
-    public Page<Person> findByitsMeAndNameContaining(boolean flag, String name, Pageable pageable);
+    public Page<Person> findByitsMeFalse(Pageable pageable);
 
-    public List<Person> findByitsMeAndNameContaining(boolean flag, String name);
+    public Page<Person> findByitsMeFalseAndNameContaining(String name, Pageable pageable);
+
+    public List<Person> findByitsMeFalseAndNameContaining(String name);
 
 }

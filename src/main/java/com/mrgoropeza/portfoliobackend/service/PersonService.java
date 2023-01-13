@@ -27,7 +27,7 @@ public class PersonService implements IPersonService {
 
     @Override
     public Person getMyInfo() {
-        List<Person> request = personRepo.findByitsMe(true);
+        List<Person> request = personRepo.findByItsMeTrue();
         Person me;
         if(request.size() == 0){
             me = new Person();
@@ -51,16 +51,16 @@ public class PersonService implements IPersonService {
 
     @Override
     public List<Person> getAll() {
-        return personRepo.findByitsMe(false);
+        return personRepo.findByitsMeFalse();
     }
 
     @Override
     public List<Person> getWithQuery(String query) throws IOException {
         QueryMeta queryMeta = QueryMeta.fromCodedString(query);
         if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
-            return personRepo.findAll(queryMeta.toPageable()).toList();
+            return personRepo.findByitsMeFalse(queryMeta.toPageable()).toList();
         }
-        return personRepo.findByitsMeAndNameContaining(false, queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
+        return personRepo.findByitsMeFalseAndNameContaining(queryMeta.getGlobalFilter(), queryMeta.toPageable()).toList();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class PersonService implements IPersonService {
 
     @Override
     public long getTotalRecords() {
-        return personRepo.findByitsMe(false).size();
+        return personRepo.findByitsMeFalse().size();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class PersonService implements IPersonService {
         if(queryMeta.getGlobalFilter().equalsIgnoreCase("")){
             return getTotalRecords();
         }
-        return personRepo.findByitsMeAndNameContaining(false, queryMeta.getGlobalFilter()).size();
+        return personRepo.findByitsMeFalseAndNameContaining(queryMeta.getGlobalFilter()).size();
     }
     
 }
