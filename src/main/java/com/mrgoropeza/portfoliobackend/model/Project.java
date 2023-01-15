@@ -19,6 +19,7 @@ public class Project {
     private Long id;
     private String name;
     private String url;
+    private String description;
     @ManyToMany()
     private List<Person> collab;
     @ManyToMany()
