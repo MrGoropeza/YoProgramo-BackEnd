@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.mrgoropeza.portfoliobackend.model.Project;
 import com.mrgoropeza.portfoliobackend.repository.ProjectRepository;
 import com.mrgoropeza.portfoliobackend.service.interfaces.IProjectService;
 import com.mrgoropeza.portfoliobackend.utils.QueryClasses.QueryMeta;
 
+@Service
 public class ProjectService implements IProjectService {
 
     @Autowired
