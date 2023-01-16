@@ -12,21 +12,21 @@ import io.jsonwebtoken.security.Keys;
 
 public class TokenUtils {
 
-    public static String createToken(String name, String secret, Long validity) {
-        long expirationTime = validity * 1000;
+    public static String createToken(String name) {
+        long expirationTime = Long.parseLong(JwtProperties.validity) * 1000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
         return Jwts.builder()
                 .setSubject(name)
                 .setExpiration(expirationDate)
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(JwtProperties.secret.getBytes()))
                 .compact();
     }
 
-    public static UsernamePasswordAuthenticationToken getAuthentication(String token, String secret, Long validity) {
+    public static UsernamePasswordAuthenticationToken getAuthentication(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secret.getBytes())
+                    .setSigningKey(JwtProperties.secret.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();

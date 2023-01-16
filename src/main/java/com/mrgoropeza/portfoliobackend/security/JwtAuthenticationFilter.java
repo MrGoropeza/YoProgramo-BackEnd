@@ -3,7 +3,6 @@ package com.mrgoropeza.portfoliobackend.security;
 import java.io.IOException;
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,11 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    @Value("${jwt.secret}")
-    private String secret;
-    @Value("${jwt.validity}")
-    private String validity;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authResult) throws IOException, ServletException {
 
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authResult.getPrincipal();
-        String token = TokenUtils.createToken(userDetailsImpl.getUsername(), secret, Long.parseLong(validity));
+        String token = TokenUtils.createToken(userDetailsImpl.getUsername());
 
         response.addHeader("Authorization", "Bearer " + token);
         response.getWriter().flush();
